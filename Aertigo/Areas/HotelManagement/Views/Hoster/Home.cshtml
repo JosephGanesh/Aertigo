@@ -1,0 +1,166 @@
+﻿@using Aertigo.Areas.HotelManagement.Models
+
+@{
+    ViewBag.Title = "Home";
+    Layout = "~/Areas/HotelManagement/Views/Hoster/_Layout.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+
+        $(".trFurtherDetails").hide();
+        $("#tbToDate").change(function () {
+            $.ajax({
+                method: "POST",
+                url: 'GetBookingsCount',
+                data: { "hotelID": '@Convert.ToInt32(Session["hotelID"])', 'fromDate': $("#tbFromDate").val(), 'toDate': $("#tbToDate").val() },
+                success: function (data) {
+                    $('#spanTotalCount').html('');
+                    $('#spanTotalCount').html(data);
+                }
+            });
+        });
+
+        $("#btnViewDetails").click(function () {
+            debugger;
+            var id = $("#btnViewDetails").data('id');
+            $("#" + id).toggle("slow");
+        });
+
+        var isValid = true;
+        $("#customSwitches").change(function (event) {
+            $.ajax({
+                method: "POST",
+                url: 'DeactivateHotel',
+                data: { "hotelID": '@Convert.ToInt32(Session["hotelID"])'},
+                success: function (data) {
+                    $("#customSwitches").attr('disabled', 'disabled');
+                    $.alert({
+                        title: 'De-Activated Successfully!',
+                        content: 'Hotel De-Activated, For More Detials Contact Us!'
+                    });
+                    setTimeout(function () {
+                        window.location.href = "/Login/MainLogin";
+                    }, 2000);
+                }
+            });
+        });
+
+        $("#tbToDate").change(function () {
+            debugger;
+            var fromDate = new Date($("#tbFromDate").val());
+            var toDate = new Date($(this).val());
+            if (toDate < fromDate) {
+                $.alert({
+                    title: 'Invalid Date',
+                    content: 'To Date Cannot Be Greater Than From Date'
+                });
+                $("#tbFromDate").val('');
+                $(this).val('');
+
+            }
+        });
+    });
+</script>
+<div class="float-right font-italic">
+    <p>Hotel ID: AERTIGO - @Session["hotelID"].ToString()</p>
+</div>
+<br />
+<br />
+
+<div class="float-right">
+    <input id="customSwitches" type="checkbox" checked data-toggle="toggle" data-onstyle="outline-success" data-offstyle="outline-danger" data-on="Online" data-off="Offline">
+</div>
+<br />
+<br />
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Dashboard</u></p>
+</div>
+<br />
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="form-group form-inline">
+                    <label>From: &nbsp; @Html.TextBox("fromDate", null, new { @id = "tbFromDate", @class = "form-control", @type = "date" })</label>&nbsp;&nbsp;
+                    <label>To: &nbsp; @Html.TextBox("fromTo", null, new { @id = "tbToDate", @class = "form-control", @type = "date" })</label>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-md-6 text-center" style="background-color: #FF8A5C;">
+                <div class="text-white lead">
+                    <p>Total Bookings: <br /> <span id="spanTotalCount" style="font-size: 50px;">@ViewBag.TodayCount</span> </p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="lead">
+                <p>List Of Bookings: </p>
+            </div>
+            <table class="table table-borderless table-dark">
+                <tr class="text-center">
+                    <th>Username</th>
+                    <th>Phone Number</th>
+                    <th>Number Of Rooms</th>
+                    <th>Payment Type</th>
+                    <th>View Details</th>
+                </tr>
+                @{
+                    List<BookedUsersDetailsModel> lstBookedDetails = ViewBag.Details as List<BookedUsersDetailsModel>;
+                    foreach (BookedUsersDetailsModel detail in lstBookedDetails)
+                    {
+                        <tr class="text-center">
+                            <td>@detail.Username</td>
+                            <td>@detail.PhoneNumber</td>
+                            <td>@detail.NumberOfRooms</td>
+                            <td>@detail.ModeOfPayment</td>
+                            <td><button id="btnViewDetails" class="btn btn-block" type="button" data-id="@detail.BookingID" style="background-color: #FF8A5C;">View Details</button></td>
+                        </tr>
+                        <tr id="@detail.BookingID" class="trFurtherDetails text-center lead">
+                            <td>Expected Arriving Time: @detail.ExpectedArrivingTime</td>
+                            <td>Number Of Guests: @detail.NumberOfGuests</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+        <div class="lead">
+            <p>User's Comments</p>
+        </div>
+        <div class="row justify-content-center">
+            @{
+                List<CommentsHosterViewModel> comments = ViewBag.Comments as List<CommentsHosterViewModel>;
+                foreach (CommentsHosterViewModel comment in comments)
+                {
+                    <div class="col-md-9">
+                        <div class="card mb-3" style="max-width: 1000px;">
+                            <div class="row no-gutters" style="font-family: 'Rubik';">
+                                <div class="col-md-4">
+                                    <img src="~/Areas/User/UserImages/@comment.UserImage" class="card-img img-fluid" alt="..." style="width: 250px; height: 252px;">
+                                </div>
+                                <div class="col-md-8">
+                                    <div class="card-body">
+                                        <lablel class="card-text"><b>Email ID: </b>  <span class="lead"> @comment.EmailID </span></lablel><br /> <br />
+                                        <lablel><b>Comment: </b> @Html.Label(comment.Comment, new { @class = "card-text lead" }) </lablel><br /><br />
+                                        <label><b>Rating: </b>@Html.Label(comment.Rating, new { @class = "lead card-text" }) / 5 </label><br /><br />
+                                        @{
+                                            if (this.User.IsInRole("Admin"))
+                                            {
+                                                <div>
+                                                    @Html.ActionLink("Delete Comment", "DeleteComment", "Admin", new { area = "Admin", commentID = comment.CommentID }, new { @class = "btn btn-danger" })
+                                                </div>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+}

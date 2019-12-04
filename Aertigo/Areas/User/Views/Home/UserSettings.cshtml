@@ -1,0 +1,181 @@
+﻿@using Aertigo.Areas.User.Models
+@model UserModel
+
+@{
+    ViewBag.Title = "UserSettings";
+    Layout = "~/Areas/User/Views/Home/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Aertigo | Registration</title>
+    <link rel="stylesheet" href="~/Utilities/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Utilities/Jquery/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Utilities/Jquery/jquery-ui.theme.min.css" />
+    <script src="~/Utilities/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="~/Utilities/Jquery/jquery-3.4.1.min.js"></script>
+    <script src="~/Utilities/Jquery/jquery-ui.min.js"></script>
+    <script>
+        $(document).ready(function () {
+
+            $.ajax({
+                method: "POST",
+                url: '/User/User/GetCityName',
+                data: { "cityID": @Model.CityID},
+                success: function (data) {
+                    debugger;
+                    $("#ddlCites").html('');
+                    $("#ddlCites").append("<option value= " + data.Value + ">" + data.Text + "</option>");
+                }
+            });
+
+            $("#dvUserCardDetails").hide(20);
+
+            $("#tbDOB").focusin(function () {
+                this.type = 'date';
+            });
+            $("#tbDOB").focusout(function () {
+                this.type = 'text';
+            })
+            $("#btnAddUserCard").click(function () {
+                $("#dvUserCardDetails").toggle("slow");
+            })
+
+            $("#ddlStates").change(function () {
+                $.ajax({
+                    method: "POST",
+                    url: '/User/User/GetCities',
+                    data: { "stateID": parseInt($("#ddlStates").prop("selectedIndex")) },
+                    success: function (data) {
+                        $("#ddlCites").html('');
+                        $("#ddlCites").append("<option>--Select Your City--</option>");
+                        for (var city of data) {
+                            $("#ddlCites").append("<option value= " + city.Value + ">" + city.Text + "</option > ");
+                        }
+                    }
+                });
+            })
+        });
+    </script>
+</head>
+<body>
+    <br />
+    <div class="container">
+        <div class="display-3" style="color: #FF8A5C;">
+            <p>Settings</p>
+            <hr />
+        </div>
+        @using (Html.BeginForm("Settings", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            <div class="text-center">
+                <img src="~/Areas/User/UserImages/@Model.UserImage" class="rounded" alt="..." style="width: 250px; height: 250px; border-radius: 50% !important;">
+            </div>
+            <div class="row">
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td class="text-center">
+                                @Html.TextBoxFor(firstname => firstname.FirstName, new { @id = "tbFirstName", @class = "form-control", @placeholder = "Enter Your First Name" })
+                                @Html.ValidationMessageFor(firstname => firstname.FirstName, "", new { @class = "text-danger" })
+                            </td>
+                            <td class="text-center">
+                                @Html.TextBoxFor(lastname => lastname.LastName, new { @id = "tbLastName", @class = "form-control", @placeholder = "Enter Your Last Name" })
+                                @Html.ValidationMessageFor(lastname => lastname.LastName, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                @Html.TextBoxFor(email => email.EmailID, new { @id = "tbEmailID", @class = "form-control", @placeholder = "Enter Your EmailID" })
+                                @Html.ValidationMessageFor(email => email.EmailID, "", new { @class = "text-danger" })
+                            </td>
+                            <td class="text-center">
+                                @Html.TextBoxFor(phone => phone.PhoneNumber, new { @id = "tbPhone", @class = "form-control", @placeholder = "Enter Your Phone Number" })
+                                @Html.ValidationMessageFor(phone => phone.PhoneNumber, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                @Html.TextBoxFor(password => password.Password, new { @id = "tbPassword", @class = "form-control", @placeholder = "Enter Your Password" })
+                                @Html.ValidationMessageFor(password => password.Password, "", new { @class = "text-danger" })
+                            </td>
+                            <td class="text-center">
+                                @Html.PasswordFor(repassword => repassword.Repassword, new { @id = "tbRePassword", @class = "form-control", @placeholder = "Re-Type Your Passsword" })
+                                @Html.ValidationMessageFor(respassword => respassword.Repassword, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                @Html.DropDownListFor(stateID => stateID.StateID, ViewBag.States as List<SelectListItem>, "--Select Your State--", new { @id = "ddlStates", @class = "form-control", @style = "padding: 8px !important; width: 100% !important; color: black;" })
+                                @Html.ValidationMessageFor(stateID => stateID.StateID, "", new { @class = "text-danger" })
+                            </td>
+                            <td class="text-center">
+                                @Html.DropDownListFor(cityID => cityID.CityID, new List<SelectListItem> { new SelectListItem { Text = "--Select Your City--", Value = "0" } }, new { @id = "ddlCites", @class = "form-control", @style = "padding: 8px !important; width: 100% !important; color: black;" })
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="col-md-6">
+                    <table class="table table-borderless">
+                        <tr>
+                            <td colspan="3" class="text-center">
+                                @Html.TextAreaFor(address => address.Address, new { @id = "tbAddress", @class = "form-control", @style = "resize: none !important; height: 98px;", @placeholder = "Enter Your Full Address" })
+                                @Html.ValidationMessageFor(address => address.Address, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-center">
+                                @Html.TextBoxFor(dob => dob.DateOfBirth, new { @class = "form-control", @id = "tbDOB", @placeholder = "Enter Date Of Birth" })
+                                @Html.ValidationMessageFor(dob => dob.DateOfBirth, "", new { @class = "text-danger" })
+                            </td>
+                            <td class="text-center">
+                                @Html.DropDownListFor(gender => gender.Gender, new List<SelectListItem> { new SelectListItem { Value = "Male", Text = "Male" }, new SelectListItem { Value = "Female", Text = "Female" }, new SelectListItem { Value = "Other", Text = "Other" } }, "--Select Gender--", new { @class = "form-control", @id = "ddlGender", @style = "padding: 8px !important; width: 100% !important;" })
+                                @Html.ValidationMessageFor(gender => gender.Gender, "", new { @class = "text-danger" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.LabelFor(image => image.UserImage, "Upload Your Image:", new { @class = "lead" })
+                            </td>
+                            <td>
+                                <input type="file" name="file"/>
+                                @Html.TextBoxFor(image => image.UserImage, new { @type = "hidden" })
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                @Html.TextBoxFor(userId => userId.UserID, new { @type = "hidden" })
+                            </td>
+                            <td>
+                                @Html.TextBoxFor(cardID => cardID.CardID, new { @type = "hidden" })
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+            <button type="button" class="btn btn-outline-primary" id="btnAddUserCard"> &#43; Add Debit/Credit Card</button>
+
+            <div class="row justify-content-lg-center" style="margin-top: 30px; margin-bottom: 30px;">
+                <div class="col-md-4">
+                    <button class="btn btn-block" type="submit" style="background-color: #FF8A5C; color: white;">Update Details</button>
+                </div>
+                <div class="col-md-4">
+                    @Html.ActionLink("Cancel And Go back", "Home", "Home", null, new { @class = "btn btn-block btn-danger" })
+                </div>
+            </div>
+        }
+
+        <div class="lead" id="HideOrShowCard">
+            <div class="row" id="dvUserCardDetails" style="margin-top: 30px;">
+                @{
+                    Html.RenderPartial(ViewBag.CardView as string, ViewBag.UserCard as CardModel);
+                }
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
+

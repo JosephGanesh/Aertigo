@@ -1,0 +1,72 @@
+﻿@using Aertigo.Areas.Admin.Models
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aertigo | @ViewBag.Title</title>
+    <title>Aertigo | Dashboard</title>
+    <link rel="stylesheet" href="~/Utilities/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/Utilities/Jquery/jquery-ui.min.css" />
+    <link rel="stylesheet" href="~/Utilities/Jquery/jquery-ui.theme.min.css" />
+    <script src="~/Utilities/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="~/Utilities/Jquery/jquery-3.4.1.min.js"></script>
+    <script src="~/Utilities/Jquery/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+    <style>
+        body, html {
+            height: 100% !important;
+        }
+
+        @@media only screen and (min-width: 768px) {
+            aside {
+                height: 100% !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid h-100">
+        <div class="row h-100">
+            <aside class="col-12 col-md-2 p-0 bg-dark fixed-top">
+                <nav class="navbar navbar-expand navbar-dark bg-dark flex-md-column flex-row align-items-start py-2">
+                    <div class="collapse navbar-collapse align-items-start">
+                        <ul class="flex-md-column flex-row navbar-nav w-100 justify-content-between">
+                            <li class="nav-item">
+                                @Html.ActionLink("Aertigo Admin", "Dashboard", "Admin", null, new { @class = "navbar-brand", @style = "font-family: 'Rubik'; color: #FF8A5C; font-size: 20px;" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Partners", "Partners", "Admin", null, new { @class = "nav-link pl-0" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Offers", "Offers", "Admin", null, new { @class = "nav-link pl-0" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Requests", "Requests", "Admin", null, new { @class = "nav-link pl-0" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Feedbacks", "Feedbacks", "Admin", null, new { @class = "nav-link pl-0" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Users", "Users", "Admin", null, new { @class = "nav-link pl-0" })
+                            </li>
+                            <li class="nav-item">
+                                @Html.ActionLink("Logout", "Logout", "Admin", null, new { @class = "nav-link pl-0" })
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+            </aside>
+            <main class="col offset-md-2 bg-faded py-3">
+                <br />
+                <br />
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+</body>
+</html>

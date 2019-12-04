@@ -1,0 +1,61 @@
+﻿
+@{
+    bool error = (TempData["userNotFound"] == null) ? false : true;
+    if (error)
+    {
+        <script>
+            $(document).ready(function () {
+                $.alert({
+                    title: 'Invalid User!',
+                    content: 'Wrong Username (or) Password'
+                });
+            });
+        </script>
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $("#tbEmailID").change(function () {
+            debugger;
+            var regex = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+            if (!regex.test($(this).val())) {
+                $.alert({
+                    title: 'Invalid EmailID',
+                    content: "Please Provide Valid EmailID",
+                });
+                $(this).val('');
+            }
+        });
+    });
+</script>
+<div class="container" style="margin-top: 40px;">
+    @using (Html.BeginForm("ValidateUser", "Login", FormMethod.Post))
+    {
+        <div class="lead text-center" style="color: #FF8A5C; font-family: 'Be Vietnam';">
+            <p>Login As User</p>
+        </div>
+        <table class="table table-borderless">
+            <tr>
+                <td>
+                    <input id="tbEmailID" name="emailID" class="form-control" placeholder="Enter Your Email ID." required />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input id="tbPassword" type="password" name="password" class="form-control" placeholder="Enter Your Password." required />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="btnUserLogin" class="btn btn-block" style="background-color: #FF8A5C !important; color: white;">Login</button>
+                </td>
+            </tr>
+            <tr class="text-center">
+                <td>
+                    <label>New To Aertigo @Html.ActionLink("Sign Up Here", "UserRegistration", "User", new { area = "User" }, null) & Become An Aerigan</label>
+                </td>
+            </tr>
+        </table>
+    }
+</div>

@@ -1,0 +1,48 @@
+﻿@using Aertigo.Areas.Admin.Models
+@model List<UsersModel>
+@{
+    ViewBag.Title = "Users";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Users</u></p>
+</div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-borderless table-striped table-dark">
+                <tr>
+                    <th>User EmailID</th>
+                    <th>Total Bookings</th>
+                    <th>Status</th>
+                    <th>Explore</th>
+                    <th>De-Activate</th>
+                </tr>
+                @{
+                    List<UsersModel> usersDetails = Model;
+                    foreach (UsersModel user in usersDetails)
+                    {
+                        <tr>
+                            <td>@user.EmailID</td>
+                            <td>@user.TotalBookings</td>
+                            @{
+                                if (user.Status)
+                                {
+                                    <td class="text-success">Active</td>
+                                }
+                                else
+                                {
+                                    <td class="text-danger">De-Active</td>
+                                }
+                            }
+                            <td>@Html.ActionLink("Activate", "ActivateUser", new { userID = user.UserID }, new { @class = "btn", @style = "background-color: #FF8A5C; color: white;" })</td>
+                            <td>@Html.ActionLink("De-Activate", "DeActivateUser", new { userID = user.UserID }, new { @class = "btn btn-danger" })</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>

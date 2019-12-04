@@ -1,0 +1,66 @@
+﻿@using Aertigo.Models
+@model HosterViewModel
+
+@{
+    bool error = (TempData["hosterNotFound"] == null) ? false : true;
+    if (error)
+    {
+        <script>
+            $(document).ready(function () {
+                $.alert({
+                    title: 'Invalid User!',
+                    content: 'Wrong HotelID (or) Password'
+                });
+
+                $("#tbHotelID").val('');
+            });
+        </script>
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $("#tbHotelID").change(function () {
+            debugger;
+            var regex = /^\d+$/;
+            if (!regex.test($(this).val())) {
+                $.alert({
+                    title: 'Invalid HotelID',
+                    content: "Please Provide Valid HotelID",
+                });
+                $(this).val('');
+            }
+        });
+    });
+</script>
+
+<div class="container" style="margin-top: 40px;">
+    @using (Html.BeginForm("ValidateHoster", "Login", FormMethod.Post))
+    {
+        <div class="lead text-center" style="color: #FF8A5C; font-family: 'Be Vietnam';">
+            <p>Login As Hoster</p>
+        </div>
+        <table class="table table-borderless">
+            <tr class="text-center">
+                <td>
+                    <input id="tbHotelID" name="hotelID" class="form-control" placeholder="Enter Your HotelID." required />
+                </td>
+            </tr>
+            <tr class="text-center">
+                <td>
+                    <input id="tbPassword" type="password" name="password" class="form-control" placeholder="Enter Your Password." required />
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button id="btnHosterLogin" class="btn btn-block" style="background-color: #FF8A5C !important; color: white;">Login</button>
+                </td>
+            </tr>
+            <tr class="text-center">
+                <td>
+                    <label>Want To Host Your Hotel? @Html.ActionLink("Join With Us", "Registration", "Hotel", new { area = "HotelManagement" }, null) & Explore</label>
+                </td>
+            </tr>
+        </table>
+    }
+</div>

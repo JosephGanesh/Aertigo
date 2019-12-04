@@ -1,0 +1,135 @@
+﻿@using Aertigo.Areas.User.Models
+@model CardModel
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $("#tbValidFrom").focusin(function () {
+            this.type = 'date';
+        });
+        $("#tbValidFrom").focusout(function () {
+            this.type = 'text';
+        })
+
+        $("#tbValidTo").focusin(function () {
+            this.type = 'date';
+        });
+        $("#tbValidTo").focusout(function () {
+            this.type = 'text';
+        })
+
+        $("#btnCardCancel").click(function () {
+            $("#dvUserCardDetails").toggle("slow");
+        })
+
+        $("#dvThankYou").hide(50);
+
+        $("#btnCardUpdate").click(function () {
+            if ($("#tbCardNumber").val() != "" && $("#ddlCardType").val() != "" && $("#ddlMerchant").val() != "" && $("#ddlBankName").val() != "" && $("#tbCardHolder").val() != "" && $("#tbCardCVV").val() != "" && $("#tbValidFrom").val() != "" && $("#tbValidTo").val() != "" && $("#tbCardPasssword").val() != "" && $("#tbCardRePasssword").val() != "") {
+                if ($("#tbCardPasssword").val() !== $("#tbCardRePasssword").val()) {
+                    $.alert({
+                        title: 'Password Mismatch',
+                        content: "Passwords Are Not Matching",
+                    });
+                }
+                else {
+                    $.ajax({
+                        method: "POST",
+                        url: "UpdateCardsDetails",
+                        data: $("form").serialize(),
+                        success: function (data) {
+                            $.alert({
+                                title: 'Success',
+                                content: 'Card Details Updated Successfully!'
+                            });
+                        }
+                    })
+                }
+            }
+            else {
+                debugger;
+                var error = "";
+                for (var field of $("form")[2]) {
+                    if (field.value == "" && field != "CardID") {
+                        error = error + "<br/>" + field.name + " \n";
+                    }
+                }
+                $.alert({
+                    title: 'Please Fill The Following',
+                    content: error,
+                });
+            }
+        });
+    })
+</script>
+<div class="container" id="dvCardDetails">
+    <div class="jumbotron">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div id="dvDetails">
+                    @using (Html.BeginForm())
+                    {
+                        <table class="table table-borderless">
+                            <tr>
+                                <td>
+                                    @Html.TextBoxFor(cardNumber => cardNumber.CardNumber, new { @id = "tbCardNumber", @class = "form-control", @placeholder = "Enter Card Number" })
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(cardType => cardType.CardType, new List<SelectListItem> { new SelectListItem { Text = "Debit Card", Value = "Debit Card" }, new SelectListItem { Text = "Credit Card", Value = "Credit Card" } }, "--Select Your Card--", new { @id = "ddlCardType", @class = "form-control", @style = "padding: 3px !important; width: 100%;" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.DropDownListFor(merchant => merchant.CardMerchant, new List<SelectListItem> { new SelectListItem { Text = "Master Card", Value = "Master Card" }, new SelectListItem { Text = "Visa", Value = "Visa" }, new SelectListItem { Text = "American Express", Value = "American Express" } }, "--Select Card Merchant--", new { @id = "ddlMerchant", @class = "form-control", @style = "padding: 3px !important; width: 100%;" })
+                                </td>
+                                <td>
+                                    @Html.DropDownListFor(bankName => bankName.BankName, new List<SelectListItem> { new SelectListItem { Text = "ICICI", Value = "ICICI" }, new SelectListItem { Text = "Kotak Mahindra", Value = "Kotak Mahindra" }, new SelectListItem { Text = "AXIS", Value = "AXIS" } }, "--Select Bank Name--", new { @id = "ddlBankName", @class = "form-control", @style = "padding: 3px !important; width: 100%;" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.TextBoxFor(name => name.CardHolderName, new { @id = "tbCardHolder", @class = "form-control", @placeholder = "Enter Name On The Card" })
+                                </td>
+                                <td>
+                                    @Html.PasswordFor(cvv => cvv.CardCVV, new { @id = "tbCardCVV", @class = "form-control", @placeholder = "Enter Card CVV" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.TextBoxFor(validFrom => validFrom.CardValidFrom, new { @id = "tbValidFrom", @class = "form-control", @placeholder = "Enter Card Valid From Date" })
+                                </td>
+                                <td>
+                                    @Html.TextBoxFor(validTo => validTo.CardValidTo, new { @id = "tbValidTo", @class = "form-control", @placeholder = "Enter Card Valid To Date" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    @Html.TextBoxFor(password => password.CardPassword, new { @id = "tbCardPasssword", @class = "form-control", @placeholder = "Enter Card Password" })
+                                </td>
+                                <td>
+                                    @Html.PasswordFor(Repassword => Repassword.RePassword, new { @id = "tbCardRePasssword", @class = "form-control", @placeholder = "Re-Enter Your Card Password" })
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <button class="btn btn-block btn-outline-light" type="button" id="btnCardUpdate" style="background-color: #FF8A5C; color: white;">Update Card</button>
+                                </td>
+                                <td>
+                                    <button class="btn btn-block btn-danger" type="button" id="btnCardCancel">Cancel</button>
+                                </td>
+                            </tr>
+                        </table>
+                    }
+                </div>
+                <div id="dvThankYou">
+                    <div class="text-center alert alert-success lead">
+                        <p>Thank You! Your Card Details Updated Successfully</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

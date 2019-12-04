@@ -1,0 +1,276 @@
+﻿@using Aertigo.Areas.HotelManagement.Models
+@model HotelFacilityViewModel
+
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Areas/HotelManagement/Views/Hoster/_Layout.cshtml";
+}
+
+@{
+    bool success = (ViewBag.Success != null) ? (bool)ViewBag.Success : false;
+    if (success && this.User.IsInRole("Admin"))
+    {
+        <script>
+            $.alert({
+                title: 'Updated Successfully',
+                content: 'Hotel Details Updated Successfully'
+            });
+            setTimeout(function () {
+                window.location.href = "../../Admin/Admin/Partners";
+            }, 2000);
+        </script>
+    }
+    else if(success)
+    {
+        <script>
+            $.alert({
+                title: 'Updated Successfully',
+                content: 'Hotel Details Updated Successfully'
+            });
+        </script>
+    }
+}
+<script>
+    $(document).ready(function () {
+        $("#tbHotelStartedDate").focusin(function () {
+            this.type = 'date';
+        });
+
+        $.ajax({
+            method: "POST",
+            url: "/User/User/GetCities",
+            data: { "stateID": '@Model.Hotel.StateID' },
+            success: function (data) {
+                debugger;
+                $("#ddlCites").html('');
+                for (var city of data) {
+                    $("#ddlCites").append("<option value= " + city.Value + ">" + city.Text + "</option > ");
+                }
+            }
+        });
+        
+        $("#tbHotelStartedDate").focusout(function () {
+            this.type = 'text';
+        });
+
+        $("#ddlStates").change(function () {
+            $.ajax({
+                method: "POST",
+                url: "/User/User/GetCities",
+                data: { "stateID": parseInt($("#ddlStates").prop("selectedIndex")) },
+                success: function (data) {
+                    debugger;
+                    $("#ddlCites").html('');
+                    for (var city of data) {
+                        $("#ddlCites").append("<option value= " + city.Value + ">" + city.Text + "</option > ");
+                    }
+                }
+            });
+        })
+    });
+</script>
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Settings</u></p>
+</div>
+
+@using (Html.BeginForm("Settings", "Hoster", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="text-center">
+                            @Html.TextBoxFor(hotelname => hotelname.Hotel.HotelName, new { @id = "tbHotelName", @class = "form-control", @placeholder = "Enter Your Hotel Name" })
+                            @Html.ValidationMessageFor(hotelname => hotelname.Hotel.HotelName, "", new { @class = "text-danger" })
+                        </td>
+                        <td class="text-center">
+                            @Html.DropDownListFor(stateid => stateid.Hotel.StateID, ViewBag.States as List<SelectListItem>, "--Select State--", new { @id = "ddlStates", @class = "form-control" })
+                            @Html.ValidationMessageFor(stateid => stateid.Hotel.StateID, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            @Html.TextAreaFor(address => address.Hotel.Address, new { @id = "tbAddress", @class = "form-control", @rows = "5", @style = "resize: none;", @placeholder = "Enter Your Hotel Full Address" })
+                            @Html.ValidationMessageFor(address => address.Hotel.Address, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            <div style="color: #FF8A5C;">
+                                <p>Select facilities Available In Your Hotel</p>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        @{
+                            <td>
+                                @for (int i = 0; i < Model.Facilities.Count; i++)
+                                {
+                                    @Html.HiddenFor(facilityID => facilityID.Facilities[i].FacilityID)
+                                    @Html.HiddenFor(description => description.Facilities[i].Description)
+                                    <div class="custom-control custom-checkbox">
+                                        @Html.CheckBoxFor(isSelected => isSelected.Facilities[i].isSelected, new { @class = "custom-control-input", @id = "customCheck_" + Model.Facilities[i].FacilityID, @name = "example1" })
+                                        <label class="custom-control-label" for="customCheck_@Model.Facilities[i].FacilityID">@Model.Facilities[i].Description</label>
+                                    </div>
+                                }
+                            </td>
+                        }
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            @Html.TextBoxFor(contactNumber => contactNumber.Hotel.ContactNumber, new { @id = "tbContactNumber", @class = "form-control", @placeholder = "Enter Hotel Contact Number" })
+                            @Html.ValidationMessageFor(contactNumber => contactNumber.Hotel.ContactNumber, "", new { @class = "text-danger" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(emailID => emailID.Hotel.EmailID, new { @id = "tbEmail", @class = "form-control", @placeholder = "Enter Your Hotel Email ID" })
+                            @Html.ValidationMessageFor(emailID => emailID.Hotel.EmailID, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <td class="text-center">
+                            @Html.DropDownListFor(cityID => cityID.Hotel.CityID, new List<SelectListItem> { new SelectListItem { Text = "--Select City --", Value = "0" } }, new { @id = "ddlCites", @class = "form-control" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(hotelStartedDate => hotelStartedDate.Hotel.HotelStartedDate, new { @id = "tbHotelStartedDate", @class = "form-control", @placeholder = "Enter Hotel Started Date" })
+                            @Html.ValidationMessageFor(hotelStartedDate => hotelStartedDate.Hotel.HotelStartedDate, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            @Html.TextAreaFor(aboutHotel => aboutHotel.Hotel.AboutHotel, new { @id = "tbAboutHotel", @class = "form-control", @rows = "6", @placeholder = "Enter About Your Hotel", @style = "resize: none;" })
+                            @Html.ValidationMessageFor(aboutHotel => aboutHotel.Hotel.AboutHotel, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            @Html.TextBoxFor(oneBHK => oneBHK.Hotel.PriceFor1BHK, new { @id = "tb1BHKPrice", @class = "form-control", @placeholder = "Enter Price For 1 BKH" })
+                            @Html.ValidationMessageFor(oneBHK => oneBHK.Hotel.PriceFor1BHK, "", new { @class = "text-danger" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(twoBHK => twoBHK.Hotel.PriceFor2BHK, new { @id = "tb2BHKPrice", @class = "form-control", @placeholder = "Enter Price For 2 BKH" })
+                            @Html.ValidationMessageFor(twoBHK => twoBHK.Hotel.PriceFor2BHK, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            @Html.TextBoxFor(facebook => facebook.Hotel.FacebookAddress, new { @id = "tbFacebook", @class = "form-control", @placeholder = "Enter Hotel Facebook Page" })
+                            @Html.ValidationMessageFor(facebook => facebook.Hotel.FacebookAddress, "", new { @class = "text-danger" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(instagram => instagram.Hotel.InstagramAddress, new { @id = "tbInstagram", @class = "form-control", @placeholder = "Enter Hotel Instagram Page" })
+                            @Html.ValidationMessageFor(instagram => instagram.Hotel.InstagramAddress, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="text-center">
+                            @Html.TextBoxFor(api => api.Hotel.GoogleAPI, new { @id = "tbGoogleAPI", @class = "form-control", @placeholder = "Enter Your Hotel Google API" })
+                            @Html.ValidationMessageFor(api => api.Hotel.GoogleAPI, "", new { @class = "text-danger" })
+                        </td>
+                        <td class="text-center">
+                            @Html.TextBoxFor(password => password.Hotel.Password, new { @id = "tbPassword", @class = "form-control", @placeholder = "Set Password" })
+                            @Html.ValidationMessageFor(password => password.Hotel.Password, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <table class="table table-borderless table-dark text-center">
+                    <tr>
+                        <td>
+                            <img src="~/Areas/HotelManagement/HotelImages/@Model.Hotel.Image1" class="img-fluid img-thumbnail" style="width: 250px; height: 250px;" />
+                            @Html.TextBoxFor(image1 => image1.Hotel.Image1, new { @type = "hidden" })
+                            <p class="text-white">Hotel Image 1</p>
+                        </td>
+                        <td>
+                            <img src="~/Areas/HotelManagement/HotelImages/@Model.Hotel.image2" class="img-fluid img-thumbnail" style="width: 250px; height: 250px;" />
+                            @Html.TextBoxFor(image2 => image2.Hotel.image2, new { @type = "hidden" })
+                            <p class="text-white">Hotel Image 2</p>
+                        </td>
+                        <td>
+                            <img src="~/Areas/HotelManagement/HotelImages/@Model.Hotel.Image3" class="img-fluid img-thumbnail" style="width: 250px; height: 250px;" />
+                            @Html.TextBoxFor(image3 => image3.Hotel.Image3, new { @type = "hidden" })
+                            <p class="text-white">Hotel Image 3</p>
+                        </td>
+                        <td>
+                            <img src="~/Areas/HotelManagement/HotelImages/@Model.Hotel.image4" class="img-fluid img-thumbnail" style="width: 250px; height: 250px;" />
+                            @Html.TextBoxFor(image4 => image4.Hotel.image4, new { @type = "hidden" })
+                            <p class="text-white">Hotel Image 4</p>
+                        </td>
+                    </tr>
+                </table>
+                @{
+                    if (this.User.IsInRole("Admin"))
+                    {
+                        <div class="text-center">
+                            <img src="~/Areas/HotelManagement/HotelImages/@Model.Hotel.HotelCertificate" class="img-fluid mx-auto d-block img-thumbnail" width="250" height="250" />
+                            @Html.TextBoxFor(certificate => certificate.Hotel.HotelCertificate, new { @type = "hidden" })
+                            <p>Hotel Certificate</p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="text-center" style="color: #FF8A5C;">
+            <p>Upload Your Hotel Images</p>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>
+                            <input type="file" name="file1" />
+                        </td>
+                        <td>
+                            <input type="file" name="file2" />
+                        </td>
+                    </tr>
+                </table>
+                @{
+                    if (this.User.IsInRole("Admin"))
+                    {
+                        <button class="btn btn-block" style="background-color: #FF8A5C; color: white;">Approve</button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-block" style="background-color: #FF8A5C; color: white;">Update Details</button>
+                    }
+                }
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless">
+                    <tr>
+                        <td>
+                            <input type="file" name="file3" />
+                        </td>
+                        <td>
+                            <input type="file" name="file4" />
+                        </td>
+                    </tr>
+                </table>
+                @{
+                    if (this.User.IsInRole("Admin"))
+                    {
+                        <div>
+                            @Html.ActionLink("Cancel & Go Back", "Requests", "Admin", new { area = "Admin" }, new { @class = "btn btn-block btn-danger" })
+                        </div>
+                    }
+                    else
+                    {
+                        <div>
+                            @Html.ActionLink("Cancel & Go Back", "Dashboard", null, new { @class = "btn btn-block btn-danger" })
+                        </div>
+                    }
+                }
+                @Html.TextBoxFor(hotelID => hotelID.Hotel.HotelID, new { @type = "hidden" })
+            </div>
+        </div>
+        <br />
+    </div>
+}

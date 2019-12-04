@@ -1,0 +1,36 @@
+﻿@using Aertigo.Areas.Admin.Models
+
+@{
+    ViewBag.Title = "Feedbacks";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Feedbacks</u></p>
+</div>
+<br />
+<div class="container">
+    <div class="row justify-content-center">
+        @{
+            List<FeedbackForAdminModel> feedbacks = ViewBag.Feedbacks as List<FeedbackForAdminModel>;
+            foreach (FeedbackForAdminModel feedback in feedbacks)
+            {
+                <div class="col-md-9">
+                    <div class="card mb-3" style="max-width: 1000px;">
+                        <div class="row no-gutters" style="font-family: 'Rubik';">
+                            <div class="col-md-4">
+                                <img src="~/Areas/User/UserImages/@feedback.UserImage" class="card-img img-fluid" alt="..." style="width: 250px; height: 252px;">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <lablel class="card-text"><b>Email ID: </b>  <span class="lead"> @feedback.EmailID </span></lablel><br /> <br />
+                                    <lablel><b>Feedback: </b> @Html.Label(feedback.Feedback, new { @class = "card-text lead" }) </lablel><br /><br />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>

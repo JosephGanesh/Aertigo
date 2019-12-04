@@ -1,0 +1,51 @@
+﻿@using Aertigo.Areas.User.Models
+@using Aertigo.Areas.HotelManagement.Models
+
+<script>
+    $(document).ready(function () {
+        $("#dvRange #bMin").html($("#tbRange").attr("min"));
+
+        $("#tbRange").change(function () {
+            debugger;
+            $("#dvRange #bSelected").html($(this).val());
+        });
+
+        $("#btnCustomSearch").click(function () {
+            $.ajax({
+                method: "POST",
+                url: 'CustomHotelSearch',
+                data: { "hotelName": $("#tbHotelName").val(), "cityName": $("#tbCity").val(), "minPrice": parseInt($("#bMin").html()), "maxPrice": parseInt($("#bSelected").html()) },
+                success: function (data) {
+                    window.location.href = "Home/Home";
+                }
+            });
+        });
+    })
+</script>
+
+<div class="jumbotron">
+    <div class="container ">
+        <div class="lead font-weight-bold text-capitalize">
+            <p style="color: #FF8A5C; text-decoration: underline;">Search Hotel </p>
+        </div>
+        @using (Html.BeginForm())
+        {
+            <div class="row">
+                <div class="col-md-3">
+                    @Html.TextBox("tbHotelName", null, new { @id = "tbHotelName", @class = "form-control", @placeholder = "Enter Hotel Name" })
+                </div>
+                <div class="col-md-3">
+                    @Html.TextBox("tbCity", null, new { @id = "tbCity", @class = "form-control", @placeholder = "Enter City Name" })
+                </div>
+                <div class="col-md-4">
+                    @Html.TextBox("tbPrice", null, new { @id = "tbRange", @class = "custom-range", @placeholder = "Enter The Price Range", @type = "range", @min = "1000", @max = "10000" })
+                    <br />
+                    <div id="dvRange"><p>Minimum Price: <b id="bMin"></b> &nbsp;&nbsp; Maximum Price: <b id="bSelected"></b></p></div>
+                </div>
+                <div class="col-md-2">
+                    <button id="btnCustomSearch" class="btn btn-block" type="button" style="background-color: #FF8A5C; color: white;">Search</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>

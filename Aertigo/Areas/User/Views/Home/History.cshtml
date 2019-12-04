@@ -1,0 +1,179 @@
+﻿@using Aertigo.Areas.User.Models;
+@model UserCommentsModel
+
+@{
+    ViewBag.Title = "History";
+    Layout = "~/Areas/User/Views/Home/_Layout.cshtml";
+}
+
+<link rel="stylesheet" href="~/Utilities/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+<script src="~/Utilities/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<script src="~/Utilities/Jquery/jquery-3.4.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var rating = "";
+        $("#btnSubmit").click(function () {
+            if (rating != "") {
+                var comment = $("#tbComment").val();
+                var hotelID = $(this).data('id');
+                $.ajax({
+                    method: "POST",
+                    url: 'AddComment',
+                    data: { 'hotelID': parseInt(hotelID), 'emailID': '@Session["email"]', 'password': '@Session["password"]', 'rating': parseInt(rating), 'comment': comment },
+                    success: function (data) {
+                        $.alert({
+                            title: 'Thank You!',
+                            content: 'Rating Submitted! Thank You For Sharing Your Experince With Us!'
+                        });
+                    }
+                });
+            }
+            else {
+                $.alert({
+                    title: 'Rating Missing',
+                    content: "Please Provide Rating",
+                });
+            }
+        });
+
+        $("#btnCancel").click(function () {
+            debugger;
+            var bookingID = $(this).data('id');
+            $.confirm({
+                title: 'Cancelling Booking',
+                content: 'Are You Sure Want To Cancel?',
+                buttons: {
+                    yes: function () {
+                            $.ajax({
+                                method: "POST",
+                                url: 'CancelRoom',
+                                data: { 'bookingID': parseInt(bookingID) },
+                                success: function (data) {
+                                    $.alert({
+                                        title: 'Thank You!',
+                                        content: 'Rating Submitted! Thank You For Sharing Your Experince With Us!'
+                                    });
+                                }
+                        });
+                        window.location.href = 'CancelRoom?bookingID=' + parseInt(bookingID);
+                    },
+                    cancel: function () {
+                        // Do Nothing
+                    }
+                }
+            });
+        });
+
+        $(".btnRating").click(function () {
+            debugger;
+            rating = parseInt($(this).prop("innerHTML"));
+        });
+    });
+</script>
+<style>
+    .btn#btn1, #btn2, #btn3, #btn4, #btn5, .btn.btn-block {
+        background-color: #FF8A5C;
+        color: white;
+    }
+</style>
+<br />
+<div class="container">
+    @{
+            if (Model.BookingDetails.Count != 0)
+            {
+                using (Html.BeginForm())
+                {
+                    <div class="display-4" style="color: #FF8A5C; text-transform: capitalize; text-decoration: underline; font-family: 'Rubik';">
+                        <p>Recent Bookings</p>
+                    </div>
+                    <br />
+                    foreach (BookRoomModel Booking in Model.BookingDetails)
+                    {
+                        <div class="row justify-content-center">
+                            <div class="col-md-9">
+                                <div class="card mb-3" style="max-width: 1000px;">
+                                    <div class="row no-gutters" style="font-family: 'Rubik';">
+                                        <div class="col-md-4">
+                                            <img src="~/Areas/HotelManagement/HotelImages/@Booking.HotelImage1" class="card-img img-fluid" alt="..." style="width: 250px; height: 252px;">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <p class="card-title"><b>Hotel Name: </b>@Booking.HotelName</p>
+                                                <p class="card-text"><b>Hotel Address:</b> @Booking.HotelAddress</p>
+                                                <p class="card-text"><b>Hotel Price: </b> @Booking.TotalCost</p>
+                                                <div class="form-group form-inline">
+                                                    <label class="card-text"><b>Check In Date: </b> @Booking.CheckInDate</label>&nbsp;&nbsp;
+                                                    <label class="card-text"><b>Check Out Date: </b>@Booking.CheckOutDate</label>
+                                                </div>
+                                                @{
+                                                    if (DateTime.Now.Date <= Convert.ToDateTime(Booking.CheckInDate).Date)
+                                                    {
+                                                        <button class="btn btn-danger" type="button" id="btnCancel" data-id="@Booking.BookingID">Cancel Request</button>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                @{
+                                    if (DateTime.Now.Date > Convert.ToDateTime(Booking.CheckOutDate).Date)
+                                    {
+                                        <div id="dvRating">
+                                            <div class="card mb-3" style="max-width: 1000px;">
+                                                <div class="row">
+                                                    <div class="col-md-5">
+                                                        <div class="form-group">
+                                                            <table class="table table-borderless">
+                                                                <tr>
+                                                                    <td>
+                                                                        @Html.TextAreaFor(comment => comment.Comment, new { @class = "form-control", @id = "tbComment", @style = "resize: none", @placeholder = "Share Your Experience About Your Stay, Thank You." })
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-7">
+                                                        <table class="table table-borderless">
+                                                            <tr>
+                                                                <td>
+                                                                    <label>Rating:</label>
+                                                                    <div class="form-group form-check-inline">
+                                                                        <button class="btn btnRating" type="button" id="btn1">1</button> &nbsp;&nbsp;
+                                                                        <button class="btn btnRating" type="button" id="btn2">2</button>&nbsp;&nbsp;
+                                                                        <button class="btn btnRating" type="button" id="btn3">3</button>&nbsp;&nbsp;
+                                                                        <button class="btn btnRating" type="button" id="btn4">4</button>&nbsp;&nbsp;
+                                                                        <button class="btn btnRating" type="button" id="btn5">5</button>&nbsp;&nbsp;
+                                                                    </div>
+                                                                </td>
+                                                                <td>
+                                                                    <button id="btnSubmit" data-id="@Booking.HotelID" type="button" disabled="@ViewBag.Enable" class="btn btn-block">Submit</button>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    }
+                }
+            }
+            if (Model.BookingDetails.Count == 0)
+            {
+                <div class="jumbotron">
+                    <div class="text-center display-4 text-secondary lead">
+                        <p>-- No Bookings --</p>
+                    </div>
+                </div>
+            }
+        }
+</div>

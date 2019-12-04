@@ -1,0 +1,87 @@
+﻿@using Aertigo.Areas.Admin.Models
+
+@{
+    ViewBag.Title = "Dashboard";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+
+        $("#tbToDate").change(function () {
+            $.ajax({
+                method: "POST",
+                url: 'GetTotalCountOnGivenDate',
+                data: { 'fromDate': $("#tbFromDate").val(), 'toDate': $("#tbToDate").val() },
+                success: function (data) {
+                    $('#spanTotalCount').html('');
+                    $('#spanTotalCount').html(data);
+                }
+            });
+        });
+
+        $("#tbToDate").change(function () {
+            debugger;
+            var fromDate = new Date($("#tbFromDate").val());
+            var toDate = new Date($(this).val());
+            if (toDate < fromDate) {
+                $.alert({
+                    title: 'Invalid Date',
+                    content: 'To Date Cannot Be Greater Than From Date'
+                });
+                $("#tbFromDate").val('');
+                $(this).val('');
+
+            }
+        });
+    });
+</script>
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Dashboard</u></p>
+</div>
+<br />
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="form-group form-inline">
+                <label>From: &nbsp; @Html.TextBox("fromDate", null, new { @id = "tbFromDate", @class = "form-control", @type = "date" })</label>&nbsp;&nbsp;
+                <label>To: &nbsp; @Html.TextBox("fromTo", null, new { @id = "tbToDate", @class = "form-control", @type = "date" })</label>
+            </div>
+            <br />
+            <div class="text-center" style="background-color: #FF8A5C;">
+                <div class="text-white lead">
+                    <p>Total Bookings: <br /> <span id="spanTotalCount" style="font-size: 50px;">@ViewBag.Count</span> </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="row justify-content-center">
+        <div class="col-md-9 text-center">
+            <p class="lead">Hotel Booked List: </p>
+            <table class="table table-borderless table-dark text-center">
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>Email ID</th>
+                    <th>Number Of Rooms</th>
+                    <th>Total Price</th>
+                    <th>Payment Type</th>
+                </tr>
+                @{
+                    List<BookedDetailsModel> bookedDetails = ViewBag.BookedDetails as List<BookedDetailsModel>;
+                    foreach (BookedDetailsModel detail in bookedDetails)
+                    {
+                        <tr class="text-center">
+                            <td>@detail.HotelName</td>
+                            <td>@detail.EmailID</td>
+                            <td>@detail.NumberOfRooms</td>
+                            <td>@detail.TotalCost</td>
+                            <td>@detail.ModeOfPayment</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>

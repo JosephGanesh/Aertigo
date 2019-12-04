@@ -1,0 +1,59 @@
+﻿@using Aertigo.Models
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Aertigo | Login</title>
+    <link rel="stylesheet" href="~/Utilities/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+    <script src="~/Utilities/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+    <script src="~/Utilities/Jquery/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <style>
+        .aertigo_logo {
+            font-family: 'Rubik';
+            color: #FF8A5C;
+            margin-top: 30px;
+        }
+    </style>
+    @{
+        bool success = (TempData["success"] == null) ? false : true;
+        if (success)
+        {
+            <script>
+                $(document).ready(function () {
+                    $.alert({
+                        title: 'Successfully Registered',
+                        content: 'Thank You For Registering In Aertigo! Log In And Explore More.'
+                    });
+                });
+            </script>
+        }
+    }
+</head>
+<body>
+    <div class="container">
+        <div class="text-center display-2 aertigo_logo">
+            <p>Aertigo</p>
+            <hr />
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                @{
+                    Html.RenderPartial("_UserLogin", null);
+                }
+            </div>
+            <div class="col-md-6">
+                @{
+                    Html.RenderPartial("_HotelLogin", ViewBag.hotelLogin as HosterViewModel);
+                }
+            </div>
+        </div>
+        <div class="text-center lead" style="color: #F77754; font-family: 'Rubik';">
+            <p>2019 &copy; All Rights Reserved To Aertigo</p>
+        </div>
+    </div>
+</body>
+</html>

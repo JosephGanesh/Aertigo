@@ -1,0 +1,80 @@
+﻿@using Aertigo.Areas.User.Models
+@model FeedBackModel
+@{
+    ViewBag.Title = "Contact Us";
+    Layout = "~/Areas/User/Views/Home/_Layout.cshtml";
+}
+
+@{ 
+    bool success = ((bool)ViewBag.Success == true) ? (bool)ViewBag.Success : false;
+    if (success)
+    {
+        <script>
+            $(document).ready(function () {
+                $.alert({
+                    title: ' Thank You!',
+                    content: 'Feedback Submitted Successfully!'
+                });
+            });
+        </script>
+    }
+}
+
+<div class="display-4" style="color: #FF8A5C; text-transform: capitalize; text-decoration: underline; margin-top: 50px;">
+    <p>Contact Us</p>
+</div>
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <div class="row">
+            <br />
+            <br />
+            <br />
+            <div class="col-md-6 text-center">
+                <br />
+                <p class="lead" style="color: #FF8A5C; font-family: 'Be Vietnam';">Fill the following to send query</p>
+                <table class="table table-borderless text-center">
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(firstName => firstName.Firstname, new { @id = "tbFirstName", @class = "form-control", @placeholder = "Enter Your Name" })
+                            @Html.ValidationMessageFor(firstname => firstname.Firstname, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(emailID => emailID.EmailID, new { @id = "tbEmailID", @class = "form-control", @placeholder = "Enter Your EmailID" })
+                            @Html.ValidationMessageFor(emailID => emailID.EmailID, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextBoxFor(phoneNumber => phoneNumber.PhoneNumber, new { @id = "tbPhoneNumber", @class = "form-control", @placeholder = "Enter Your Phone Number" })
+                            @Html.ValidationMessageFor(phoneNumber => phoneNumber.PhoneNumber, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @Html.TextAreaFor(feedback => feedback.Feedback, new { @id = "tbFeedback", @class = "form-control", @row = "10", @placeholder = "Enter Your Feedback", @style = "resize: none;" })
+                            @Html.ValidationMessageFor(feedback => feedback.Feedback, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-block" style="background-color: #FF8A5C; color: white;">Send Query</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-md-6 text-center">
+                <br />
+                <p class="lead" style="color: #FF8A5C; font-family: 'Be Vietnam';">Here We Are:</p>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3889.016186350586!2d77.62866971433355!3d12.906680619792757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bae1494abb8d645%3A0x1c242372d60a6d41!2sState%20Bank%20of%20India!5e0!3m2!1sen!2sin!4v1573974495689!5m2!1sen!2sin" height="250" frameborder="0" style="border:0; width: 100%;" allowfullscreen=""></iframe>
+                <br />
+                <br />
+                <p style="color: #FF8A5C; font-family: 'Be Vietnam';">Contact Us: 9611666579 &nbsp;&nbsp;Email ID: joesphganesh508@gmail.com</p>
+                <br />
+            </div>
+        </div>
+    </div>
+}
+

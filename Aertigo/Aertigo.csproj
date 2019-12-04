@@ -1,0 +1,308 @@
+﻿<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" />
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0327C925-F631-4B97-ACFB-8BDFBA48BA98}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aertigo</RootNamespace>
+    <AssemblyName>Aertigo</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <LangVersion>7.1</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.3.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Web.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Deployment">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Webpages.Razor">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Webpages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Helpers">
+      <HintPath>..\packages\Microsoft.AspNet.Webpages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\User\UserImages\Koala.jpg" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-grid.css" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-grid.min.css" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-reboot.css" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-reboot.min.css" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap.css" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap.min.css" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.bundle.js" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.bundle.min.js" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.js" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.min.js" />
+    <Content Include="Utilities\fonts\Be_Vietnam\OFL.txt" />
+    <Content Include="Utilities\fonts\Dosis\OFL.txt" />
+    <Content Include="Utilities\fonts\Quicksand\OFL.txt" />
+    <Content Include="Global.asax" />
+    <Content Include="Utilities\HotelImages\cabinet-ceiling-clean-1669799.jpg" />
+    <Content Include="Utilities\Jquery\jquery-3.4.1.min.js" />
+    <Content Include="Utilities\Jquery\jquery-ui.min.css" />
+    <Content Include="Utilities\Jquery\jquery-ui.min.js" />
+    <Content Include="Utilities\Jquery\jquery-ui.theme.min.css" />
+    <Content Include="Utilities\Jquery\jquery.validate.js" />
+    <Content Include="Utilities\Jquery\jquery.validate.min.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\AdminController.cs" />
+    <Compile Include="Areas\Admin\Models\AdminModuleManager.cs" />
+    <Compile Include="Areas\Admin\Models\BookedDetailsModel.cs" />
+    <Compile Include="Areas\Admin\Models\FeedbackForAdminModel.cs" />
+    <Compile Include="Areas\Admin\Models\PartnersViewModel.cs" />
+    <Compile Include="Areas\Admin\Models\OfferDetailsModel.cs" />
+    <Compile Include="Areas\Admin\Models\UsersModel.cs" />
+    <Compile Include="Areas\HotelManagement\Controllers\HosterController.cs" />
+    <Compile Include="Areas\HotelManagement\Controllers\HotelController.cs" />
+    <Compile Include="Areas\HotelManagement\HotelManagementAreaRegistration.cs" />
+    <Compile Include="Areas\HotelManagement\Models\BookedUsersDetailsModel.cs" />
+    <Compile Include="Areas\HotelManagement\Models\FacilityModel.cs" />
+    <Compile Include="Areas\HotelManagement\Models\FacilityModelManager.cs" />
+    <Compile Include="Areas\HotelManagement\Models\HotelModel.cs" />
+    <Compile Include="Areas\HotelManagement\Models\HotelModelManager.cs" />
+    <Compile Include="Areas\HotelManagement\Models\HotelFacilityViewModel.cs" />
+    <Compile Include="Areas\HotelManagement\Models\OffersModel.cs" />
+    <Compile Include="Areas\HotelManagement\Models\OffersModelManager.cs" />
+    <Compile Include="Areas\HotelManagement\Models\CommentsHosterViewModel.cs" />
+    <Compile Include="Areas\User\Controllers\HomeController.cs" />
+    <Compile Include="Areas\User\Controllers\UserController.cs" />
+    <Compile Include="Areas\User\Models\BookingRoomModelManager.cs" />
+    <Compile Include="Areas\User\Models\BookRoomModel.cs" />
+    <Compile Include="Areas\User\Models\CardModel.cs" />
+    <Compile Include="Areas\User\Models\CardModelManager.cs" />
+    <Compile Include="Areas\User\Models\CarousalModel.cs" />
+    <Compile Include="Areas\User\Models\CarousalModelManager.cs" />
+    <Compile Include="Areas\User\Models\FeedBackModel.cs" />
+    <Compile Include="Areas\User\Models\FeedbackModelManager.cs" />
+    <Compile Include="Areas\User\Models\GuestModel.cs" />
+    <Compile Include="Areas\User\Models\UserCommentsModel.cs" />
+    <Compile Include="Areas\User\Models\UserCommentsManager.cs" />
+    <Compile Include="Areas\User\Models\UserModel.cs" />
+    <Compile Include="Areas\User\Models\UserModelManager.cs" />
+    <Compile Include="Areas\User\UserAreaRegistration.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AdminModelManger.cs" />
+    <Compile Include="Models\HosterModelManager.cs" />
+    <Compile Include="Models\HosterViewModel.cs" />
+    <Compile Include="Models\UserModelManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utilities\Connection.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\web.config" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-Bold.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-BoldItalic.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-ExtraBold.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-ExtraBoldItalic.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-Italic.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-Light.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-LightItalic.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-Medium.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-MediumItalic.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-Regular.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-SemiBold.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-SemiBoldItalic.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-Thin.ttf" />
+    <Content Include="Utilities\fonts\Be_Vietnam\BeVietnam-ThinItalic.ttf" />
+    <Content Include="Utilities\fonts\Dosis\Dosis-VariableFont_wght.ttf" />
+    <Content Include="Utilities\fonts\Dosis\README" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-Bold.ttf" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-ExtraBold.ttf" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-ExtraLight.ttf" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-Light.ttf" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-Medium.ttf" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-Regular.ttf" />
+    <Content Include="Utilities\fonts\Dosis\static\Dosis-SemiBold.ttf" />
+    <Content Include="Utilities\fonts\Quicksand\Quicksand-VariableFont_wght.ttf" />
+    <Content Include="Utilities\fonts\Quicksand\README" />
+    <Content Include="Utilities\fonts\Quicksand\static\Quicksand-Bold.ttf" />
+    <Content Include="Utilities\fonts\Quicksand\static\Quicksand-Light.ttf" />
+    <Content Include="Utilities\fonts\Quicksand\static\Quicksand-Medium.ttf" />
+    <Content Include="Utilities\fonts\Quicksand\static\Quicksand-Regular.ttf" />
+    <Content Include="Utilities\fonts\Quicksand\static\Quicksand-SemiBold.ttf" />
+    <Content Include="Areas\User\Views\web.config" />
+    <Content Include="Areas\HotelManagement\Views\web.config" />
+    <Content Include="Areas\Admin\Views\web.config" />
+    <Content Include="Areas\User\Views\User\Registration.cshtml" />
+    <Content Include="Areas\User\Views\Home\_Layout.cshtml" />
+    <Content Include="Areas\User\Views\Home\HomePage.cshtml" />
+    <Content Include="Areas\User\Views\Home\_CustomSearch.cshtml" />
+    <Content Include="Areas\User\Views\Home\History.cshtml" />
+    <Content Include="Areas\User\Views\Home\UserSettings.cshtml" />
+    <Content Include="Areas\User\Views\Home\_UserCardDetailsRegistered.cshtml" />
+    <Content Include="Areas\User\Views\Shared\_UserCardDetails.cshtml" />
+    <Content Include="Areas\HotelManagement\Views\Hotel\Registration.cshtml" />
+    <Content Include="Areas\HotelManagement\Views\Hoster\_Layout.cshtml" />
+    <Content Include="Areas\HotelManagement\Views\Hoster\Home.cshtml" />
+    <Content Include="Areas\HotelManagement\Views\Hoster\Settings.cshtml" />
+    <Content Include="Areas\HotelManagement\Views\Hoster\Offers.cshtml" />
+    <Content Include="Areas\User\Views\Home\Booking.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\_Layout.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Dashboard.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Partners.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Offers.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Requests.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Users.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\OffersDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\Admin\Feedbacks.cshtml" />
+    <Content Include="Areas\User\Views\Home\HotelDetails.cshtml" />
+    <Content Include="Areas\User\Views\Home\Contact.cshtml" />
+    <None Include="packages.config" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-grid.css.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-grid.min.css.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-reboot.css.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap-reboot.min.css.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap.css.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\css\bootstrap.min.css.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.bundle.js.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.bundle.min.js.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.js.map" />
+    <Content Include="Utilities\bootstrap-4.3.1-dist\js\bootstrap.min.js.map" />
+    <Content Include="Views\Login\MainLogin.cshtml" />
+    <Content Include="Views\Login\_UserLogin.cshtml" />
+    <Content Include="Views\Login\_HotelLogin.cshtml" />
+    <Content Include="Views\Login\AdminLogin.cshtml" />
+    <Content Include="Views\Login\Error.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Views\Shared\" />
+    <Folder Include="Areas\HotelManagement\HotelImages\" />
+    <Folder Include="Areas\HotelManagement\OfferPosters\" />
+    <Folder Include="Areas\HotelManagement\Views\Shared\" />
+    <Folder Include="Utilities\UsersImages\" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>49311</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:49312/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.3.0\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.3.0\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.3.0\build\EntityFramework.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,132 @@
+﻿@using Aertigo.Areas.HotelManagement.Models
+@model OffersModel
+@{
+    ViewBag.Title = "OffersDetails";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+
+        $("#tbValidFrom").focusin(function () {
+            this.type = 'date';
+        });
+
+        $("#tbValidFrom").focusout(function () {
+            this.type = 'text';
+        });
+
+        $("#tbValidTo").focusin(function () {
+            this.type = 'date';
+        });
+
+        $("#tbValidTo").focusout(function () {
+            this.type = 'text';
+        });
+
+        $("#tbValidFrom").change(function () {
+            var date = new Date($(this).val());
+            var currentDate = new Date();
+
+            if (currentDate.getDate() > date.getDate() || currentDate.getMonth() > date.getMonth() || currentDate.getFullYear() > date.getFullYear()) {
+                $.alert({
+                    title: 'Invalid Date',
+                    content: 'Valid From Date Is Invalid'
+                });
+                $(this).val('');
+            }
+        });
+
+        $("#tbValidTo").change(function () {
+            var date = new Date($(this).val());
+            var currentDate = new Date();
+
+            if (currentDate.getDate() > date.getDate() || currentDate.getMonth() > date.getMonth() || currentDate.getFullYear() > date.getFullYear()) {
+                $.alert({
+                    title: 'Invalid Date',
+                    content: 'Valid To Date Is Invalid'
+                });
+                $(this).val('');
+            }
+        });
+
+    });
+</script>
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Offers</u></p>
+</div>
+
+@using (Html.BeginForm("UpdateOfferDetails", "Admin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="container">
+        <div id="dvActive" class="row justify-content-center">
+            <div class="col-md-7">
+                <table class="table table-borderless">
+                    <tr class="text-center">
+                        <td colspan="3">
+                            <label>Upload Offer Poster: <input type="file" name="file" id="tbPoster" class="form-control"> </label><br />
+                            @{
+                                if (this.User.IsInRole("Admin"))
+                                {
+                                    <img src="~/Areas/HotelManagement/OfferPosters/@Model.OfferPoster" class="rounded mx-auto d-block" width="200" height="200">
+                                    @Html.TextBoxFor(image => image.OfferPoster, "", new { @type = "hidden" })
+                                    @Html.TextBoxFor(hotelID => hotelID.HotelID, "", new { @type = "hidden" })
+
+                                }
+                            }
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.TextBoxFor(title => title.OfferTitle, new { @id = "tbTitle", @class = "form-control", @placeholder = "Enter Title Of The Offer" })
+                            @Html.ValidationMessageFor(title => title.OfferTitle, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>
+                            @Html.TextBoxFor(validFrom => validFrom.ValidFrom, new { @id = "tbValidFrom", @class = "form-control", @placeholder = "Valid From" })
+                            @Html.ValidationMessageFor(validFrom => validFrom.ValidFrom, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(validTo => validTo.ValidTo, new { @id = "tbValidTo", @class = "form-control", @placeholder = "Valid To" })
+                            @Html.ValidationMessageFor(validTo => validTo.ValidTo, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.TextAreaFor(about => about.AboutOffer, new { @id = "tbAboutOffer", @class = "form-control", @placeholder = "Enter About Offer", @rows = "5", @style = "resize: none;" })
+                            @Html.ValidationMessageFor(about => about.AboutOffer, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.TextAreaFor(terms => terms.TermsAndCondition, new { @id = "tbTerms", @class = "form-control", @placeholder = "Enter Terms & Condition", @rows = "5", @style = "resize: none;" })
+                            @Html.ValidationMessageFor(terms => terms.TermsAndCondition, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>
+                            @Html.TextBoxFor(promo => promo.PromoCode, new { @id = "tbPromo", @class = "form-control", @placeholder = "Enter Offer Promo Code" })
+                            @Html.ValidationMessageFor(promo => promo.PromoCode, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(discount => discount.DiscountAmount, new { @id = "tbDiscountAmount", @class = "form-control", @placeholder = "Enter Discount Amount" })
+                            @Html.ValidationMessageFor(discount => discount.DiscountAmount, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <button class="btn btn-block" id="btnUpdateOffer" style="background-color: #FF8A5C; color: white;">Approve</button>
+                        </td>
+                        <td>
+                            @Html.ActionLink("Cancel & Go Back", "Offers", null, new { @class = "btn btn-block btn-danger" })
+                        </td>
+                    </tr>
+                    <tr>
+                        @Html.TextBoxFor(offerID => offerID.OfferID, "", new { @type = "hidden" })
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+}

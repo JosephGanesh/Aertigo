@@ -1,0 +1,332 @@
+﻿
+@using Aertigo.Areas.User.Models
+@model BookRoomModel
+
+@{
+    ViewBag.Title = "Booking";
+    Layout = "~/Areas/User/Views/Home/_Layout.cshtml";
+}
+<link rel="stylesheet" href="~/Utilities/bootstrap-4.3.1-dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="~/Utilities/Jquery/jquery-ui.min.css" />
+<link rel="stylesheet" href="~/Utilities/Jquery/jquery-ui.theme.min.css" />
+<script src="~/Utilities/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
+<script src="~/Utilities/Jquery/jquery-3.4.1.min.js"></script>
+<script src="~/Utilities/Jquery/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+
+@{ 
+    bool error = (bool) ViewBag.Error;
+    if (error)
+    {
+        <script>
+            $.alert({
+                title: 'Room Type Is Not Specified',
+                content: 'Please Specify Room Type'
+            });
+            $("#dvGuestsDetails").show();
+        </script>
+
+    }
+}
+
+<script>
+    $(document).ready(function () {
+
+        $("#dvGuestsDetails").hide(50);
+
+        $("#tbNumberOfGuest").change(function () {
+            $("#dvGuestsDetails").slideDown("slow");
+            $("#tbGuests").html('');
+            var count = $(this).val();
+            for (var i = 0; i < parseInt(count); i++) {
+                var row = $("<tr><td> <input id='Guests_GuestName' name='Guests.GuestName' type='text' value='' class='form-control' required placeholder='Enter Guest Name' /></td> <td><input class='form-control' id='Guests_Age' name='Guests.Age' type='number' value='' required placeholder='Guest Age' /></td> <td><input class='form-control' id='Guests_RelationType' name='Guests.RelationType' type='text' value='' required placeholder='Relation Type' /></td></tr>");
+                $("#tbGuests").append(row);
+            }
+        });
+
+        $("#tbExpectedTime").focusin(function () {
+            this.type = 'time';
+        });
+
+        $("#tbExpectedTime").focusout(function () {
+            this.type = 'text';
+        });
+
+        $("#tbCheckIn").focusin(function () {
+            this.type = 'date';
+        });
+
+        $("#tbCheckIn").focusout(function () {
+            this.type = 'text';
+        });
+
+        $("#tbCheckOut").focusin(function () {
+            this.type = 'date';
+        });
+
+        $("#tbCheckOut").focusout(function () {
+            this.type = 'text';
+        });
+
+
+        $("#tbCheckIn").change(function () {
+            var date = new Date($(this).val());
+            var currentDate = new Date();
+            if (currentDate.getDate() > date.getDate() || currentDate.getMonth() > date.getMonth() || currentDate.getFullYear() > date.getFullYear()) {
+                $.alert({
+                    title: 'Invalid Date',
+                    content: 'Please Provide Valid Date'
+                });
+                $(this).val('');
+            }
+        });
+
+        $("#tbCheckOut").change(function () {
+            var date = new Date($(this).val());
+            var currentDate = new Date();
+            if (currentDate.getDate() > date.getDate() || currentDate.getMonth() > date.getMonth() || currentDate.getFullYear() > date.getFullYear()) {
+                $.alert({
+                    title: 'Invalid Date',
+                    content: 'Please Provide Valid Date'
+                });
+                $(this).val('');
+            }
+        });
+
+        $("#ddlPaymentType").change(function () {
+            var paymentType = $(this).val();
+            if (paymentType == "Pay Using Card") {
+                $.ajax({
+                    method: "POST",
+                    url: 'AuthenticateUserCard',
+                    data: { "emailID": '@Session["email"]', 'password': '@Session["password"]' },
+                    success: function (data) {
+                        if (data == "") {
+                            $.alert({
+                                title: 'Invalid Card',
+                                content: 'No Card Found!!'
+                            });
+                            $("#ddlPaymentType").html('');
+                            $("#ddlPaymentType").append("<option>--Select Payment Type --</option>");
+                            $("#ddlPaymentType").append("<option value='Pay Using Card'>Pay Using Card</option>");
+                            $("#ddlPaymentType").append("<option value='Pay At Hotel'>Pay At Hotel</option>");
+                        }
+                        else {
+                            $.alert({
+                                title: 'Card Selected',
+                                content: 'Card Selected Successfully!!'
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#ddlRoomType").change(function () {
+            var type = $(this).val();
+            $.ajax({
+                method: "POST",
+                url: 'GetRoomTypePrice',
+                data: { "roomType": type },
+                success: function (data) {
+                    $("#totalCost").html('');
+                    $("#totalCost").html(data);
+                    $("#tbTotalCost").val(parseInt(data));
+                }
+            });
+        });
+
+        $("#tbNumberOfRooms").change(function () {
+            if ($("#ddlRoomType").val() == "") {
+                $.alert({
+                    title: 'Room Type Is Not Specified',
+                    content: 'Please Specify Room Type'
+                });
+                $(this).val('');
+            }
+            else {
+                $.ajax({
+                    method: "POST",
+                    url: 'GetRoomTypePrice',
+                    data: { "roomType": $("#ddlRoomType").val() },
+                    success: function (data) {
+                        if ($("#discountAmount").html() !== "Promo Code Disount") {
+                            $("#tbTotalCost").val(parseInt(data - $("#discountAmount").html()));
+                        }
+                        else {
+                            $("#tbTotalCost").val(data);
+                        }
+                        if ($("#tbNumberOfRooms").val() != "") {
+                            var roomsCount = $("#tbNumberOfRooms").val();
+                            $("#tbTotalCost").val(parseInt($("#tbTotalCost").val()) * parseInt(roomsCount));
+                            $("#totalCost").html('');
+                            $("#totalCost").html($("#tbTotalCost").val());
+                        }
+                    }
+                });
+            }
+        });
+
+        $("#tbPromoCode").change(function () {
+            var promoCode = $(this).val();
+            if ($("#ddlRoomType").val() == "") {
+                $.alert({
+                    title: 'Room Type Is Not Specified',
+                    content: 'Please Specify Room Type'
+                });
+                $("#tbPromoCode").val('');
+            }
+            else {
+                $.ajax({
+                    method: "POST",
+                    url: 'GetDiscountAmount',
+                    data: { "hotelID": parseInt($("#tbhotelID").val()), "promoCode": promoCode },
+                    success: function (data) {
+                        if (data === "") {
+                            $.alert({
+                                title: 'Invalid Promo Code',
+                                content: 'invalid Promo Code'
+                            });
+                            $("#tbPromoCode").val('');
+
+                            $.ajax({
+                                method: "POST",
+                                url: 'GetRoomTypePrice',
+                                data: { "roomType": $("#ddlRoomType").val() },
+                                success: function (data) {
+                                    $("#discountAmount").html("Promo Code Disount")
+                                    $("#totalCost").html('');
+                                    $("#totalCost").html(data);
+                                    $("#tbTotalCost").val(parseInt(data));
+                                }
+                            });
+                        }
+                        else {
+                            $("#tbTotalCost").val(parseInt($("#tbTotalCost").val()) - parseInt(data));
+                            $("#totalCost").html($("#tbTotalCost").val());
+                            $("#discountAmount").html('');
+                            $("#discountAmount").html(data);
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
+<br />
+<div class="container">
+    @using (Html.BeginForm("Booking", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="text-center">
+                    <img src="~/Areas/User/UserImages/@Model.UserImage" alt="Alternate Text" width="250" height="250" style="border-radius: 60%;" />
+                </div>
+                <table class="table table-borderless">
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.Label(Model.Fullname, new { @class = "lead" })
+                        </td>
+                    </tr>
+                    <tr class="text-center lead">
+                        <td>
+                            @Session["email"].ToString()
+                        </td>
+                        <td>
+                            @Html.Label(Model.MobileNumber, new { @class = "lead" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.Label(Model.Address, new { @class = "lead" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>
+                            @Html.DropDownListFor(modeOfPay => modeOfPay.ModeOfPayment, new List<SelectListItem> { new SelectListItem { Text = "Pay Using Card", Value = "Pay Using Card" }, new SelectListItem { Text = "Pay At Hotel", Value = "Pay At Hotel" } }, "--Select Payment Type --",new { @id = "ddlPaymentType", @class = "form-control" })
+                            @Html.ValidationMessageFor(modeOfPay => modeOfPay.ModeOfPayment, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.DropDownList("Room Type", new List<SelectListItem> { new SelectListItem { Text = "1 BHK", Value = "1 BHK" }, new SelectListItem { Text = "2 BHK", Value = "2 BHK" } }, "-- Select Room Type --", new { @id = "ddlRoomType", @class = "form-control" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>
+                            @Html.TextBoxFor(time => time.ExpectedTime, new { @id = "tbExpectedTime", @class = "form-control", @placeholder = "When We Can Expect You" })
+                            @Html.ValidationMessageFor(time => time.ExpectedTime, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(promo => promo.PromoCode, new { @id = "tbPromoCode", @placeholder = "Enter Promo Code", @class = "form-control" })
+                        </td>
+                    </tr>
+                </table>
+                <br />
+            </div>
+            <div class="col-md-6">
+                <div class="text-center">
+                    <img src="~/Areas/HotelManagement/HotelImages/@Model.HotelImage1" alt="Alternate Text" width="250" height="250" style="border-radius: 60%;" />
+                </div>
+                <table class="table table-borderless">
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.Label(Model.HotelName, new { @class = "lead" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td colspan="3">
+                            @Html.Label(Model.HotelAddress, new { @class = "lead" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>
+                            @Html.TextBoxFor(checkin => checkin.CheckInDate, new { @id = "tbCheckIn", @class = "form-control", @placeholder = "Select Check In Date" })
+                            @Html.ValidationMessageFor(checkin => checkin.CheckInDate, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(checkout => checkout.CheckOutDate, new { @id = "tbCheckOut", @class = "form-control", @placeholder = "Select Check Out Date" })
+                            @Html.ValidationMessageFor(checkout => checkout.CheckOutDate, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                    <tr class="text-center">
+                        <td>
+                            @Html.TextBoxFor(numberOfRooms => numberOfRooms.NumberOfRooms, new { @id = "tbNumberOfRooms", @class = "form-control", @placeholder = "Specify Number Of Rooms" })
+                            @Html.ValidationMessageFor(numberOfRooms => numberOfRooms.NumberOfRooms, "", new { @class = "text-danger" })
+                        </td>
+                        <td>
+                            @Html.TextBoxFor(numberOfGuests => numberOfGuests.NumberOfGuests, new { @id = "tbNumberOfGuest", @class = "form-control", @placeholder = "Specify Number Of Guests" })
+                            @Html.ValidationMessageFor(numberOfGuests => numberOfGuests.NumberOfGuests, "", new { @class = "text-danger" })
+                        </td>
+                    </tr>
+                </table>
+                <div id="dvGuestsDetails">
+                    <div class="text-center" style="color: #FF8A5C;">
+                        <p>Fill Guest(s) Details: </p>
+                    </div>
+                    <table class="table table-borderless" id="tbGuests"></table>
+                </div>
+                <table class="table table-dark table-borderless">
+                    <tr class="text-center">
+                        <td>
+                            <label class="lead text-white">Total Price: (<span id="discountAmount">Promo Code Disount</span>)</label>
+                        </td>
+                        <td>
+                            <label class="lead text-white">&#8360; <span id="totalCost"> 00.00</span></label>
+                            <input data-val="true" data-val-number="The field TotalCost must be a number." id="tbTotalCost" name="TotalCost" type="hidden" value="">
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <button class="btn btn-block" style="background-color: #F77754; color: white;">Book Room</button>
+                @Html.TextBoxFor(hotelID => hotelID.HotelID, new { @id="tbhotelID" , @type = "hidden" })
+            </div>
+            <div class="col-md-6">
+                @Html.ActionLink("Cancel & Go Back", "Home", "Home", null, new { @class = "btn btn-block btn-danger" })
+            </div>
+        </div>
+        <br />
+    }
+</div>

@@ -1,0 +1,53 @@
+﻿@using Aertigo.Areas.Admin.Models
+@model List<OfferDetailsModel>
+@{
+    ViewBag.Title = "Offers";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        $("#btnDeleteOffer").click(function () {
+            var id = $(this).data('id');
+            $.ajax({
+                method: "POST",
+                url: 'DeleteOffer',
+                data: { "offerID": parseInt(id) }
+            });
+        });
+    });
+</script>
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Offers</u></p>
+</div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-borderless table-striped table-dark">
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>Offer Title</th>
+                    <th>Valid From</th>
+                    <th>Valid To</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+                @{
+                    List<OfferDetailsModel> offerDetails = Model;
+                    foreach (OfferDetailsModel offer in offerDetails)
+                    {
+                        <tr>
+                            <td>@offer.HotelName</td>
+                            <td>@offer.OfferTitle</td>
+                            <td>@offer.ValidFrom</td>
+                            <td>@offer.ValidTo</td>
+                            <td>@Html.ActionLink("Edit", "OffersDetails", "Admin", new { area = "Admin", hotelID = offer.HotelID }, new { @class = "btn", @style= "background-color: #FF8A5C; color: white;" })</td>
+                            <td><button class="btn btn-danger" id="btnDeleteOffer" data-id="@offer.OfferID">Delete</button></td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>

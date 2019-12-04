@@ -1,0 +1,48 @@
+﻿@using Aertigo.Areas.Admin.Models
+@model List<PartnersViewModel>
+@{
+    ViewBag.Title = "Partners";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Partners</u></p>
+</div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-borderless table-striped table-dark">
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>Hotel Address</th>
+                    <th>Status</th>
+                    <th>Explore</th>
+                    <th>De-Activate</th>
+                </tr>
+                @{
+                    List<PartnersViewModel> hotelsDetails = Model;
+                    foreach (PartnersViewModel hotel in hotelsDetails)
+                    {
+                        <tr>
+                            <td>@hotel.HotelName</td>
+                            <td>@hotel.HotelAddres</td>
+                            @{
+                                if (hotel.Status)
+                                {
+                                    <td class="text-success">Active</td>
+                                }
+                                else
+                                {
+                                    <td class="text-danger">De-Active</td>
+                                }
+                            }
+                            <td>@Html.ActionLink("Explore", "GoToSpecificPartner", new { area = "Admin", hotelID = hotel.HotelID }, new { @class = "btn", @style = "background-color: #FF8A5C;" })</td>
+                            <td>@Html.ActionLink("De-Activate", "DeActivateHotel", new { area = "Admin", hotelID = hotel.HotelID }, new { @class = "btn btn-danger" })</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>

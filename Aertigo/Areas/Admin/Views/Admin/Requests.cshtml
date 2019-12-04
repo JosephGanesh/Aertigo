@@ -1,0 +1,38 @@
+﻿@using Aertigo.Areas.Admin.Models
+@model List<PartnersViewModel>
+
+@{
+    ViewBag.Title = "Requests";
+    Layout = "~/Areas/Admin/Views/Admin/_Layout.cshtml";
+}
+
+<div class="text-center display-3">
+    <p style="color: #FF8A5C;"><u>Hotel's Requests</u></p>
+</div>
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-borderless table-striped table-dark">
+                <tr>
+                    <th>Hotel Name</th>
+                    <th>Hotel Address</th>
+                    <th>Explore</th>
+                    <th>Reject</th>
+                </tr>
+                @{
+                    List<PartnersViewModel> hotelsDetails = Model;
+                    foreach (PartnersViewModel hotel in hotelsDetails)
+                    {
+                        <tr>
+                            <td>@hotel.HotelName</td>
+                            <td>@hotel.HotelAddres</td>
+                            <td>@Html.ActionLink("Explore", "ExploreRequestHotelDetails", new { area = "Admin", hotelID = hotel.HotelID }, new { @class = "btn btn-block", @style = "background-color: #FF8A5C;" })</td>
+                            <td>@Html.ActionLink("Reject", "RejectHotelRequest", new { area = "Admin", hotelID = hotel.HotelID }, new { @class = "btn btn-danger btn-block" })</td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>
